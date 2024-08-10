@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Submission Form</title>
+</head>
+<body>
+    <h2>Student Submission Form</h2>
+    <form id="studentForm">
+        <label for="name">Student Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="countryCode">WhatsApp Country Code:</label><br>
+        <select id="countryCode" name="countryCode" required>
+            <option value="+1">+1 (USA)</option>
+            <option value="+44">+44 (UK)</option>
+            <option value="+91">+91 (India)</option>
+            <!-- Add more country codes as needed -->
+        </select><br><br>
+
+        <label for="whatsappNumber">WhatsApp Number:</label><br>
+        <input type="text" id="whatsappNumber" name="whatsappNumber" required><br><br>
+
+        <label for="details">Details:</label><br>
+        <textarea id="details" name="details" required></textarea><br><br>
+
+        <label for="resolutionPic">Resolution Pic Upload:</label><br>
+        <input type="file" id="resolutionPic" name="resolutionPic" accept="image/*" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const countryCode = document.getElementById('countryCode').value;
+            const whatsappNumber = document.getElementById('whatsappNumber').value;
+            const details = document.getElementById('details').value;
+            const resolutionPic = document.getElementById('resolutionPic').files[0];
+
+            if (resolutionPic) {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    const imageDataUrl = reader.result;
+                    // Normally, you would upload the image data to your server here.
+
+                    // Create a WhatsApp message with the form details
+                    const message = `Student Name: ${name}%0ADetails: ${details}%0AImage is uploaded`;
+
+                    // Create a WhatsApp link
+                    const whatsappUrl = `https://api.whatsapp.com/send?phone=${countryCode}${whatsappNumber}&text=${message}`;
+
+                    // Open WhatsApp link (user will need to manually send the message)
+                    window.open(whatsappUrl, '_blank');
+                };
+                reader.readAsDataURL(resolutionPic);
+            }
+        });
+    </script>
+</body>
+</html>
