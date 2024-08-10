@@ -112,21 +112,31 @@
             const resolutionPic = document.getElementById('resolutionPic').files[0];
 
             if (resolutionPic) {
-                const reader = new FileReader();
-                reader.onloadend = function () {
-                    const imageDataUrl = reader.result;
-                    // Normally, you would upload the image data to your server here.
+                const formData = new FormData();
+                formData.append('file', resolutionPic);
+
+                // Simulate image upload and URL generation
+                // Replace the URL below with your actual server endpoint that handles image uploads
+                fetch('https://your-server-endpoint/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const imageUrl = data.url; // Assuming your server returns the image URL in the response
 
                     // Create a formatted WhatsApp message with the form details
-                    const message = `Dear ${name},%0A%0APlease find the answer:%0A%0AImage-%0A[Upload Successful]%0A%0ABest Regards,%0APw Gulf%0AContact: +916200939799`;
+                    const message = `Dear ${name},%0A%0APlease find the answer:%0A%0AImage: ${imageUrl}%0A%0ABest Regards,%0APw Gulf`;
 
                     // Create a WhatsApp link
                     const whatsappUrl = `https://api.whatsapp.com/send?phone=${countryCode}${whatsappNumber}&text=${message}`;
 
                     // Open WhatsApp link (user will need to manually send the message)
                     window.open(whatsappUrl, '_blank');
-                };
-                reader.readAsDataURL(resolutionPic);
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error);
+                });
             }
         });
     </script>
